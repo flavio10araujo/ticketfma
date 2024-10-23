@@ -1,0 +1,7 @@
+*.class
+
+/build/
+/.settings/
+/target/
+
+.idea

@@ -1,0 +1,9 @@
+server:
+  port: 8080
+
+springdoc:
+  packages-to-scan:
+    - com.ticketfma
+  swagger-ui:
+    disable-swagger-default-url: true
+    display-request-duration: true
