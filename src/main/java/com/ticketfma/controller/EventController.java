@@ -54,9 +54,6 @@ public class EventController {
     @Operation(summary = "Reserve seats for a specific event.")
     @Parameter(name = "eventId", description = "The ID of the event")
     public ResponseEntity<Void> reserveSeats(@PathVariable String eventId, @RequestBody @Valid List<SeatRequest> seatRequests) {
-        // If all seats are still available, reserve them and return 20O OK with the message "Seats reserved successfully".
-        // If any of the seats are already reserved, return 409 Conflict with the message "It was not possible to make this reservation. Seats are already reserved."
-
         eventService.reserveSeats(eventId, seatRequests);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

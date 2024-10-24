@@ -10,6 +10,7 @@ import com.ticketfma.domain.Seat;
 import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.exception.EventNotFoundException;
 import com.ticketfma.exception.SeatNotExistException;
+import com.ticketfma.exception.SeatUnavailableException;
 import com.ticketfma.repository.IEventRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,8 @@ public class EventService {
     public void reserveSeats(String eventId, List<SeatRequest> seatRequests) {
         validateEventExists(eventId);
         validateSeatsExist(eventId, seatRequests);
-
+        validateSeatsAvailable(eventId, seatRequests);
+        
         // TODO - temporary
         repository.reserveSeats(eventId, seatRequests);
     }
@@ -57,6 +59,16 @@ public class EventService {
                 log.warn("Seat '{}' in row '{}' in level '{}' in section '{}' does not exist", seatRequest.getSeatNumber(), seatRequest.getRow(),
                         seatRequest.getLevel(), seatRequest.getSection());
                 throw new SeatNotExistException(seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
+            }
+        }
+    }
+
+    private void validateSeatsAvailable(String eventId, List<SeatRequest> seatRequests) {
+        for (SeatRequest seatRequest : seatRequests) {
+            if (!repository.seatAvailable(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection())) {
+                log.warn("Seat '{}' in row '{}' in level '{}' in section '{}' is already reserved", seatRequest.getSeatNumber(), seatRequest.getRow(),
+                        seatRequest.getLevel(), seatRequest.getSection());
+                throw new SeatUnavailableException(seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
             }
         }
     }
