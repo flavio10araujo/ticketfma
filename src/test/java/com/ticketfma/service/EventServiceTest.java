@@ -134,6 +134,29 @@ public class EventServiceTest {
     }
     /* getBestSeats - END */
 
+    /* reserveSeats - BEGIN */
+    @Test
+    public void givenValidEventIdAndValidSeatRequest_whenReserveSeats_thenReserveSeatRequest() {
+        List<SeatRequest> seatRequests = List.of(new SeatRequest());
+        when(repository.eventExists(VALID_EVENT_ID)).thenReturn(true);
+        when(repository.seatExists(VALID_EVENT_ID, seatRequests.getFirst().getSeatNumber(), seatRequests.getFirst().getRow(),
+                seatRequests.getFirst().getLevel(),
+                seatRequests.getFirst().getSection())).thenReturn(true);
+        when(repository.seatAvailable(VALID_EVENT_ID, seatRequests.getFirst().getSeatNumber(), seatRequests.getFirst().getRow(),
+                seatRequests.getFirst().getLevel(),
+                seatRequests.getFirst().getSection())).thenReturn(true);
+
+        eventService.reserveSeats(VALID_EVENT_ID, seatRequests);
+
+        verify(repository).eventExists(VALID_EVENT_ID);
+        verify(repository).seatExists(VALID_EVENT_ID, seatRequests.getFirst().getSeatNumber(), seatRequests.getFirst().getRow(),
+                seatRequests.getFirst().getLevel(), seatRequests.getFirst().getSection());
+        verify(repository).seatAvailable(VALID_EVENT_ID, seatRequests.getFirst().getSeatNumber(), seatRequests.getFirst().getRow(),
+                seatRequests.getFirst().getLevel(), seatRequests.getFirst().getSection());
+        verify(repository).reserveSeats(VALID_EVENT_ID, seatRequests);
+    }
+    /* reserveSeats - END */
+
     /* stubs - BEGIN */
     private List<Event> getEvents() {
         return List.of(
