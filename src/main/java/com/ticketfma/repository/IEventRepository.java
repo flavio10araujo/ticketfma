@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
@@ -34,6 +37,7 @@ public class IEventRepository {
     private static final String SORT_BY_DATE = "date";
     private final List<Event> events = new ArrayList<>();
     private final Map<String, List<Seat>> eventSeats = new HashMap<>();
+    private final ConcurrentHashMap<String, Lock> eventLocks = new ConcurrentHashMap<>();
 
     @PostConstruct
     public void loadCsvData() {
@@ -132,16 +136,23 @@ public class IEventRepository {
                 .collect(Collectors.toList());
     }
 
-    public synchronized void reserveSeats(String eventId, List<SeatRequest> seatRequests) {
-        for (SeatRequest seatRequest : seatRequests) {
-            if (!seatAvailable(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection())) {
-                log.warn("Seat '{}' in row '{}' in level '{}' in section '{}' is already reserved", seatRequest.getSeatNumber(), seatRequest.getRow(),
-                        seatRequest.getLevel(), seatRequest.getSection());
-                throw new SeatUnavailableException(seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
-            }
+    public void reserveSeats(String eventId, List<SeatRequest> seatRequests) {
+        Lock eventLock = eventLocks.computeIfAbsent(eventId, id -> new ReentrantLock());
+        eventLock.lock();
 
-            Seat seat = getSeat(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
-            seat.setStatus(SeatStatus.HOLD);
+        try {
+            for (SeatRequest seatRequest : seatRequests) {
+                if (!seatAvailable(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection())) {
+                    log.warn("Seat '{}' in row '{}' in level '{}' in section '{}' is already reserved", seatRequest.getSeatNumber(), seatRequest.getRow(),
+                            seatRequest.getLevel(), seatRequest.getSection());
+                    throw new SeatUnavailableException(seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
+                }
+
+                Seat seat = getSeat(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
+                seat.setStatus(SeatStatus.HOLD);
+            }
+        } finally {
+            eventLock.unlock();
         }
     }
 }

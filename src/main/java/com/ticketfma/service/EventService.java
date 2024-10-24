@@ -27,22 +27,20 @@ public class EventService {
         return repository.getAllEvents(sortBy);
     }
 
-    public List<Seat> getBestSeats(String eventId, int quantity) {
-        validateEventExists(eventId);
-        return repository.getBestSeats(eventId, quantity);
-    }
-
     public Seat getSeat(String eventId, SeatRequest seatRequest) {
         validateEventExists(eventId);
         return repository.getSeat(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
+    }
+
+    public List<Seat> getBestSeats(String eventId, int quantity) {
+        validateEventExists(eventId);
+        return repository.getBestSeats(eventId, quantity);
     }
 
     public void reserveSeats(String eventId, List<SeatRequest> seatRequests) {
         validateEventExists(eventId);
         validateSeatsExist(eventId, seatRequests);
         validateSeatsAvailable(eventId, seatRequests);
-        
-        // TODO - temporary
         repository.reserveSeats(eventId, seatRequests);
     }
 
