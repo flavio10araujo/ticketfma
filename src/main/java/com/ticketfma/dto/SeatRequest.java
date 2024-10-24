@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class SeatReservationRequest {
+public class SeatRequest {
     @NotBlank
     private String seatNumber;
 

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ticketfma.domain.Event;
 import com.ticketfma.domain.Seat;
-import com.ticketfma.dto.SeatReservationRequest;
+import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.service.EventService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,8 +52,20 @@ public class EventController {
 
     @PostMapping("/v1/events/{eventId}/reserve-seats")
     @Operation(summary = "Reserve seats for a specific event.")
-    public ResponseEntity<Void> reserveSeats(@PathVariable String eventId, @RequestBody @Valid List<SeatReservationRequest> seatRequests) {
+    @Parameter(name = "eventId", description = "The ID of the event")
+    public ResponseEntity<Void> reserveSeats(@PathVariable String eventId, @RequestBody @Valid List<SeatRequest> seatRequests) {
+        // If all seats are still available, reserve them and return 20O OK with the message "Seats reserved successfully".
+        // If any of the seats are already reserved, return 409 Conflict with the message "It was not possible to make this reservation. Seats are already reserved."
+
         eventService.reserveSeats(eventId, seatRequests);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PostMapping("/v1/events/{eventId}/search-seat")
+    @Operation(summary = "Get a specific seat for a specific event.")
+    @Parameter(name = "eventId", description = "The ID of the event")
+    public ResponseEntity<Seat> getSeat(@PathVariable String eventId, @RequestBody @Valid SeatRequest seatRequest) {
+        Seat seat = eventService.getSeat(eventId, seatRequest);
+        return ResponseEntity.ok(seat);
     }
 }

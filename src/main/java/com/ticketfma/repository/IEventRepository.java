@@ -20,6 +20,8 @@ import com.opencsv.exceptions.CsvException;
 import com.ticketfma.domain.Event;
 import com.ticketfma.domain.Seat;
 import com.ticketfma.domain.enums.SeatStatus;
+import com.ticketfma.dto.SeatRequest;
+import com.ticketfma.exception.SeatUnavailableException;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -83,6 +85,16 @@ public class IEventRepository {
         }
     }
 
+    public boolean eventExists(String eventId) {
+        return eventSeats.containsKey(eventId);
+    }
+
+    public boolean seatExists(String eventId, String seatNumber, String row, String level, String section) {
+        return eventSeats.get(eventId).stream()
+                .anyMatch(seat -> seat.getSeatNumber().equals(seatNumber) && seat.getRow().equals(row) && seat.getLevel().equals(level) && seat.getSection()
+                        .equals(section));
+    }
+
     public List<Event> getAllEvents(Optional<String> sortBy) {
         return events.stream()
                 .sorted((e1, e2) -> {
@@ -98,8 +110,12 @@ public class IEventRepository {
                 .collect(Collectors.toList());
     }
 
-    public boolean eventExists(String eventId) {
-        return eventSeats.containsKey(eventId);
+    public Seat getSeat(String eventId, String seatNumber, String row, String level, String section) {
+        return eventSeats.get(eventId).stream()
+                .filter(seat -> seat.getSeatNumber().equals(seatNumber) && seat.getRow().equals(row) && seat.getLevel().equals(level) && seat.getSection()
+                        .equals(section))
+                .findFirst()
+                .orElse(null);
     }
 
     public List<Seat> getBestSeats(String eventId, int quantity) {
@@ -108,5 +124,17 @@ public class IEventRepository {
                 .sorted(Comparator.comparingInt(Seat::getSellRank)) // Best rank first.
                 .limit(quantity)
                 .collect(Collectors.toList());
+    }
+
+    public void reserveSeats(String eventId, List<SeatRequest> seatRequests) {
+        for (SeatRequest seatRequest : seatRequests) {
+            Seat seat = getSeat(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
+            if (seat.getStatus() != SeatStatus.OPEN) {
+                log.warn("Seat '{}' in row '{}' in level '{}' in section '{}' is already reserved", seatRequest.getSeatNumber(), seatRequest.getRow(),
+                        seatRequest.getLevel(), seatRequest.getSection());
+                throw new SeatUnavailableException(seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
+            }
+            seat.setStatus(SeatStatus.HOLD);
+        }
     }
 }
