@@ -27,7 +27,7 @@ public class EventService {
         return repository.getAllEvents(sortBy);
     }
 
-    public Seat getSeat(String eventId, SeatRequest seatRequest) {
+    public Optional<Seat> getSeat(String eventId, SeatRequest seatRequest) {
         validateEventExists(eventId);
         return repository.getSeat(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
     }

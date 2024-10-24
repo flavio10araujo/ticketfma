@@ -24,6 +24,7 @@ import com.ticketfma.domain.Event;
 import com.ticketfma.domain.Seat;
 import com.ticketfma.domain.enums.SeatStatus;
 import com.ticketfma.dto.SeatRequest;
+import com.ticketfma.exception.SeatNotExistException;
 import com.ticketfma.exception.SeatUnavailableException;
 
 import jakarta.annotation.PostConstruct;
@@ -120,12 +121,11 @@ public class IEventRepository {
                 .collect(Collectors.toList());
     }
 
-    public Seat getSeat(String eventId, String seatNumber, String row, String level, String section) {
+    public Optional<Seat> getSeat(String eventId, String seatNumber, String row, String level, String section) {
         return eventSeats.get(eventId).stream()
                 .filter(seat -> seat.getSeatNumber().equals(seatNumber) && seat.getRow().equals(row) && seat.getLevel().equals(level) && seat.getSection()
                         .equals(section))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
 
     public List<Seat> getBestSeats(String eventId, int quantity) {
@@ -148,8 +148,14 @@ public class IEventRepository {
                     throw new SeatUnavailableException(seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
                 }
 
-                Seat seat = getSeat(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
-                seat.setStatus(SeatStatus.HOLD);
+                Optional<Seat> optionalSeat = getSeat(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(),
+                        seatRequest.getSection());
+                if (optionalSeat.isPresent()) {
+                    Seat seat = optionalSeat.get();
+                    seat.setStatus(SeatStatus.HOLD);
+                } else {
+                    throw new SeatNotExistException(seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
+                }
             }
         } finally {
             eventLock.unlock();

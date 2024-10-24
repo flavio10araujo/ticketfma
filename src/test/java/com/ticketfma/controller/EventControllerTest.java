@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import com.ticketfma.domain.Event;
 import com.ticketfma.domain.Seat;
 import com.ticketfma.domain.enums.SeatStatus;
+import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.exception.EventNotFoundException;
 import com.ticketfma.service.EventService;
 
@@ -73,6 +74,44 @@ public class EventControllerTest {
     }
     /* getEvents - END */
 
+    /* getSeat - BEGIN */
+    @Test
+    public void givenValidEventIdAndSeatRequest_whenGetSeat_thenReturnSeat() {
+        SeatRequest seatRequest = getSeatRequest();
+        Seat seat = getSeats().getFirst();
+        when(eventService.getSeat(VALID_EVENT_ID, seatRequest)).thenReturn(Optional.ofNullable(seat));
+
+        ResponseEntity<Seat> response = eventController.getSeat(VALID_EVENT_ID, seatRequest);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(seat, response.getBody());
+        verify(eventService).getSeat(VALID_EVENT_ID, seatRequest);
+    }
+
+    @Test
+    public void givenInvalidEventId_whenGetSeat_thenReturnNotFound() {
+        SeatRequest seatRequest = getSeatRequest();
+        when(eventService.getSeat(INVALID_EVENT_ID, seatRequest)).thenThrow(new EventNotFoundException(INVALID_EVENT_ID));
+
+        assertThrows(EventNotFoundException.class, () -> {
+            eventController.getSeat(INVALID_EVENT_ID, seatRequest);
+        });
+
+        verify(eventService).getSeat(INVALID_EVENT_ID, seatRequest);
+    }
+
+    @Test
+    public void givenValidEventIdAndInvalidSeatRequest_whenGetSeat_thenReturnNotFound() {
+        SeatRequest seatRequest = getSeatRequest();
+        when(eventService.getSeat(VALID_EVENT_ID, seatRequest)).thenReturn(Optional.empty());
+
+        ResponseEntity<Seat> response = eventController.getSeat(VALID_EVENT_ID, seatRequest);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        verify(eventService).getSeat(VALID_EVENT_ID, seatRequest);
+    }
+    /* getSeat - END */
+
     /* getBestSeats - BEGIN */
     @Test
     public void givenValidEventIdAndQuantity_whenGetBestSeats_thenReturnBestSeats() {
@@ -114,6 +153,15 @@ public class EventControllerTest {
                 Seat.builder().seatNumber("3").row("30").level("z").section("f").status(SeatStatus.OPEN).sellRank(3).hasUpsells(false).build()
 
         );
+    }
+
+    private SeatRequest getSeatRequest() {
+        SeatRequest seatRequest = new SeatRequest();
+        seatRequest.setSeatNumber("2");
+        seatRequest.setRow("17");
+        seatRequest.setLevel("b");
+        seatRequest.setSection("E");
+        return seatRequest;
     }
     /* stubs - END */
 }

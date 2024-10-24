@@ -41,6 +41,14 @@ public class EventController {
         return ResponseEntity.ok(events);
     }
 
+    @PostMapping("/v1/events/{eventId}/search-seat")
+    @Operation(summary = "Get a specific seat for a specific event.")
+    @Parameter(name = "eventId", description = "The ID of the event")
+    public ResponseEntity<Seat> getSeat(@PathVariable String eventId, @RequestBody @Valid SeatRequest seatRequest) {
+        Optional<Seat> optionalSeat = eventService.getSeat(eventId, seatRequest);
+        return optionalSeat.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
     @Validated
     @GetMapping("/v1/events/{eventId}/best-seats")
     @Operation(summary = "Get best seats for a specific event.")
@@ -56,13 +64,5 @@ public class EventController {
     public ResponseEntity<Void> reserveSeats(@PathVariable String eventId, @RequestBody @Valid List<SeatRequest> seatRequests) {
         eventService.reserveSeats(eventId, seatRequests);
         return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @PostMapping("/v1/events/{eventId}/search-seat")
-    @Operation(summary = "Get a specific seat for a specific event.")
-    @Parameter(name = "eventId", description = "The ID of the event")
-    public ResponseEntity<Seat> getSeat(@PathVariable String eventId, @RequestBody @Valid SeatRequest seatRequest) {
-        Seat seat = eventService.getSeat(eventId, seatRequest);
-        return ResponseEntity.ok(seat);
     }
 }

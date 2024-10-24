@@ -33,7 +33,7 @@ About searching and reserving seats:
 2. The reserve seat endpoint updates the seat status from OPEN to HOLD. We did not implement the feature to confirm the reservation and update the status to SOLD.
 3. We are considering that if a single seat in the list is not available, the reservation will not be made.
 
-## Improvements
+## Possible Improvements
 
 ### Performance
 
@@ -45,7 +45,7 @@ However, if this application evolves to use a real database and multiple instanc
 #### Read-replicas
 
 This application has use cases with both read and write operations.
-If the application grows, we could consider using read-replicas to improve the performance of read operations and avoid blocking write operations.
+If the application grows, we could consider using read-replicas to avoid blocking write operations.
 
 #### Indexes
 

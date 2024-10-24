@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.ticketfma.domain.Event;
 import com.ticketfma.domain.Seat;
 import com.ticketfma.domain.enums.SeatStatus;
+import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.exception.EventNotFoundException;
 import com.ticketfma.repository.IEventRepository;
 
@@ -67,6 +68,46 @@ public class EventServiceTest {
         verify(repository).getAllEvents(Optional.of("date"));
     }
     /* getAllEvents - END */
+
+    /* getSeat - BEGIN */
+    @Test
+    public void givenInvalidEventId_whenGetSeat_thenThrowNoSuchElementException() {
+        when(repository.eventExists(INVALID_EVENT_ID)).thenReturn(false);
+
+        EventNotFoundException exception = assertThrows(EventNotFoundException.class, () -> {
+            eventService.getSeat(INVALID_EVENT_ID, new SeatRequest());
+        });
+
+        assertEquals("Event '" + INVALID_EVENT_ID + "' not found.", exception.getMessage());
+    }
+
+    @Test
+    public void givenValidEventIdAndSeatRequest_whenGetSeat_thenReturnSeat() {
+        SeatRequest seatRequest = new SeatRequest();
+        Seat seat = getSeats().getFirst();
+        when(repository.eventExists(VALID_EVENT_ID)).thenReturn(true);
+        when(repository.getSeat(VALID_EVENT_ID, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(),
+                seatRequest.getSection())).thenReturn(Optional.ofNullable(seat));
+
+        Seat seatReturned = eventService.getSeat(VALID_EVENT_ID, seatRequest).get();
+
+        assertEquals(seat, seatReturned);
+        verify(repository).getSeat(VALID_EVENT_ID, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
+    }
+
+    @Test
+    public void givenValidEventIdAndInvalidSeatRequest_whenGetSeat_thenReturnEmpty() {
+        SeatRequest seatRequest = new SeatRequest();
+        when(repository.eventExists(VALID_EVENT_ID)).thenReturn(true);
+        when(repository.getSeat(VALID_EVENT_ID, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(),
+                seatRequest.getSection())).thenReturn(Optional.empty());
+
+        Optional<Seat> seatReturned = eventService.getSeat(VALID_EVENT_ID, seatRequest);
+
+        assertEquals(Optional.empty(), seatReturned);
+        verify(repository).getSeat(VALID_EVENT_ID, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
+    }
+    /* getSeat - END */
 
     /* getBestSeats - BEGIN */
     @Test
