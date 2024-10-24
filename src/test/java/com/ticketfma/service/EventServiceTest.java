@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -19,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.ticketfma.domain.Event;
 import com.ticketfma.domain.Seat;
 import com.ticketfma.domain.enums.SeatStatus;
+import com.ticketfma.exception.EventNotFoundException;
 import com.ticketfma.repository.IEventRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -73,11 +73,11 @@ public class EventServiceTest {
     public void givenInvalidEventId_whenGetBestSeats_thenThrowNoSuchElementException() {
         when(repository.eventExists(INVALID_EVENT_ID)).thenReturn(false);
 
-        NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> {
+        EventNotFoundException exception = assertThrows(EventNotFoundException.class, () -> {
             eventService.getBestSeats(INVALID_EVENT_ID, 5);
         });
 
-        assertEquals("Event not found.", exception.getMessage());
+        assertEquals("Event '" + INVALID_EVENT_ID + "' not found.", exception.getMessage());
     }
 
     @Test

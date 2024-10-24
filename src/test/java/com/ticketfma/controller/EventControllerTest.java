@@ -1,12 +1,12 @@
 package com.ticketfma.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import com.ticketfma.domain.Event;
 import com.ticketfma.domain.Seat;
 import com.ticketfma.domain.enums.SeatStatus;
+import com.ticketfma.exception.EventNotFoundException;
 import com.ticketfma.service.EventService;
 
 @ExtendWith(MockitoExtension.class)
@@ -87,11 +88,12 @@ public class EventControllerTest {
 
     @Test
     public void givenInvalidEventId_whenGetBestSeats_thenReturnNotFound() {
-        when(eventService.getBestSeats(INVALID_EVENT_ID, 5)).thenThrow(new NoSuchElementException());
+        when(eventService.getBestSeats(INVALID_EVENT_ID, 5)).thenThrow(new EventNotFoundException(INVALID_EVENT_ID));
 
-        ResponseEntity<List<Seat>> response = eventController.getBestSeats(INVALID_EVENT_ID, 5);
+        assertThrows(EventNotFoundException.class, () -> {
+            eventController.getBestSeats(INVALID_EVENT_ID, 5);
+        });
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         verify(eventService).getBestSeats(INVALID_EVENT_ID, 5);
     }
     /* getBestSeats - END */
