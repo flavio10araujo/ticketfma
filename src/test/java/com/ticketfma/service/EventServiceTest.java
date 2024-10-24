@@ -82,7 +82,7 @@ public class EventServiceTest {
     }
 
     @Test
-    public void givenValidEventIdAndSeatRequest_whenGetSeat_thenReturnSeat() {
+    public void givenValidEventIdAndValidSeatRequest_whenGetSeat_thenReturnSeat() {
         SeatRequest seatRequest = new SeatRequest();
         Seat seat = getSeats().getFirst();
         when(repository.eventExists(VALID_EVENT_ID)).thenReturn(true);

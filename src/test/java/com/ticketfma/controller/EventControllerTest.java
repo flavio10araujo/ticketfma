@@ -76,7 +76,7 @@ public class EventControllerTest {
 
     /* getSeat - BEGIN */
     @Test
-    public void givenValidEventIdAndSeatRequest_whenGetSeat_thenReturnSeat() {
+    public void givenValidEventIdAndValidSeatRequest_whenGetSeat_thenReturnSeat() {
         SeatRequest seatRequest = getSeatRequest();
         Seat seat = getSeats().getFirst();
         when(eventService.getSeat(VALID_EVENT_ID, seatRequest)).thenReturn(Optional.ofNullable(seat));
@@ -114,7 +114,7 @@ public class EventControllerTest {
 
     /* getBestSeats - BEGIN */
     @Test
-    public void givenValidEventIdAndQuantity_whenGetBestSeats_thenReturnBestSeats() {
+    public void givenValidEventIdAndValidQuantity_whenGetBestSeats_thenReturnBestSeats() {
         List<Seat> seats = getSeats();
         when(eventService.getBestSeats(VALID_EVENT_ID, 5)).thenReturn(seats);
 

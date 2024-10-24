@@ -2,6 +2,7 @@ package controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -14,7 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ticketfma.Application;
+import com.ticketfma.dto.SeatRequest;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -22,6 +25,7 @@ public class EventControllerIT {
 
     private static final String URI_GET_EVENTS = "/api/v1/events";
     private static final String URI_GET_BEST_SEATS_SUFFIX = "/best-seats";
+    private static final String URI_SEARCH_SEAT_SUFFIX = "/search-seat";
     private static final String VALID_EVENT_ID = "3001";
     private static final String INVALID_EVENT_ID = "9999";
     private static final String PARAM_SORT = "sort";
@@ -29,6 +33,9 @@ public class EventControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     /* /api/v1/events - BEGIN */
     @Test
@@ -61,9 +68,40 @@ public class EventControllerIT {
     }
     /* /api/v1/events - END */
 
+    /* /api/v1/events/{eventId}/search-seat - BEGIN */
+    @Test
+    public void givenValidEventIdAndValidSeatRequest_whenGetSeat_thenReturnSeat() throws Exception {
+        String responseContent = mockMvc.perform(post(URI_GET_EVENTS + "/" + VALID_EVENT_ID + URI_SEARCH_SEAT_SUFFIX)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(getValidSeatRequest())))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        assertThat(responseContent).contains(
+                "{\"seatNumber\":\"33\",\"row\":\"C1\",\"level\":\"C\",\"section\":\"S3\",\"status\":\"HOLD\",\"sellRank\":3,\"hasUpsells\":false}"
+        );
+    }
+
+    @Test
+    public void givenInvalidEventId_whenGetSeat_thenReturnNotFound() throws Exception {
+        mockMvc.perform(post(URI_GET_EVENTS + "/" + INVALID_EVENT_ID + URI_SEARCH_SEAT_SUFFIX)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(getValidSeatRequest())))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void givenValidEventIdAndInvalidSeatRequest_whenGetSeat_thenReturnError400() throws Exception {
+        mockMvc.perform(post(URI_GET_EVENTS + "/" + VALID_EVENT_ID + URI_SEARCH_SEAT_SUFFIX)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(getInvalidSeatRequest())))
+                .andExpect(status().isNotFound());
+    }
+    /* /api/v1/events/{eventId}/search-seat - END */
+
     /* /api/v1/events/{eventId}/best-seats - BEGIN */
     @Test
-    public void givenValidEventIdAndQuantity_whenGetBestSeats_thenReturnBestSeats() throws Exception {
+    public void givenValidEventIdAndValidQuantity_whenGetBestSeats_thenReturnBestSeats() throws Exception {
         String responseContent = mockMvc.perform(get(URI_GET_EVENTS + "/" + VALID_EVENT_ID + URI_GET_BEST_SEATS_SUFFIX)
                         .param(PARAM_QUANTITY, "2")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -88,11 +126,29 @@ public class EventControllerIT {
 
     @ParameterizedTest
     @ValueSource(ints = { 0, -1, Integer.MIN_VALUE })
-    public void givenInvalidQuantity_whenGetBestSeats_thenReturnError400(int invalidQuantity) throws Exception {
+    public void givenValidEventIdAndInvalidQuantity_whenGetBestSeats_thenReturnError400(int invalidQuantity) throws Exception {
         mockMvc.perform(get(URI_GET_EVENTS + "/" + VALID_EVENT_ID + URI_GET_BEST_SEATS_SUFFIX)
                         .param(PARAM_QUANTITY, String.valueOf(invalidQuantity))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
     /* /api/v1/events/{eventId}/best-seats - END */
+
+    private SeatRequest getValidSeatRequest() {
+        SeatRequest seatRequest = new SeatRequest();
+        seatRequest.setSeatNumber("33");
+        seatRequest.setRow("C1");
+        seatRequest.setLevel("C");
+        seatRequest.setSection("S3");
+        return seatRequest;
+    }
+
+    private SeatRequest getInvalidSeatRequest() {
+        SeatRequest seatRequest = new SeatRequest();
+        seatRequest.setSeatNumber("99");
+        seatRequest.setRow("C1");
+        seatRequest.setLevel("C");
+        seatRequest.setSection("S3");
+        return seatRequest;
+    }
 }
