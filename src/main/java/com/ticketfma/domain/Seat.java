@@ -1,5 +1,7 @@
 package com.ticketfma.domain;
 
+import com.ticketfma.domain.enums.SeatStatus;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,7 +12,7 @@ public class Seat {
     private String row;
     private String level;
     private String section;
-    private String status;
+    private SeatStatus status;
     private int sellRank;
     private boolean hasUpsells;
 }

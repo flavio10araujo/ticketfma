@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ticketfma.domain.Event;
 import com.ticketfma.domain.Seat;
+import com.ticketfma.domain.enums.SeatStatus;
 import com.ticketfma.repository.IEventRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -103,9 +104,9 @@ public class EventServiceTest {
 
     private List<Seat> getSeats() {
         return List.of(
-                Seat.builder().seatNumber("2").row("17").level("b").section("E").status("OPEN").sellRank(2).hasUpsells(false).build(),
-                Seat.builder().seatNumber("3").row("35").level("t").section("K").status("OPEN").sellRank(3).hasUpsells(false).build(),
-                Seat.builder().seatNumber("3").row("30").level("z").section("f").status("OPEN").sellRank(3).hasUpsells(false).build()
+                Seat.builder().seatNumber("2").row("17").level("b").section("E").status(SeatStatus.OPEN).sellRank(2).hasUpsells(false).build(),
+                Seat.builder().seatNumber("3").row("35").level("t").section("K").status(SeatStatus.OPEN).sellRank(3).hasUpsells(false).build(),
+                Seat.builder().seatNumber("3").row("30").level("z").section("f").status(SeatStatus.OPEN).sellRank(3).hasUpsells(false).build()
 
         );
     }

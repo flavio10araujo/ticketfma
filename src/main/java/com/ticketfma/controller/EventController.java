@@ -22,7 +22,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 
-@Validated
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
@@ -38,6 +37,7 @@ public class EventController {
         return ResponseEntity.ok(events);
     }
 
+    @Validated
     @GetMapping("/v1/events/{eventId}/best-seats")
     @Operation(summary = "Get best seats for a specific event.")
     @Parameter(name = "eventId", description = "The ID of the event")

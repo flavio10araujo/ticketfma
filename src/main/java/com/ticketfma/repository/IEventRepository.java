@@ -19,6 +19,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import com.ticketfma.domain.Event;
 import com.ticketfma.domain.Seat;
+import com.ticketfma.domain.enums.SeatStatus;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -68,7 +69,7 @@ public class IEventRepository {
                         .row(seatRow)
                         .level(level)
                         .section(section)
-                        .status(status)
+                        .status(SeatStatus.valueOf(status))
                         .sellRank(sellRank)
                         .hasUpsells(hasUpsells)
                         .build();
@@ -103,7 +104,7 @@ public class IEventRepository {
 
     public List<Seat> getBestSeats(String eventId, int quantity) {
         return eventSeats.get(eventId).stream()
-                .filter(seat -> seat.getStatus().equals("OPEN"))
+                .filter(seat -> seat.getStatus() == SeatStatus.OPEN)
                 .sorted(Comparator.comparingInt(Seat::getSellRank)) // Best rank first.
                 .limit(quantity)
                 .collect(Collectors.toList());

@@ -19,13 +19,14 @@ import org.springframework.http.ResponseEntity;
 
 import com.ticketfma.domain.Event;
 import com.ticketfma.domain.Seat;
+import com.ticketfma.domain.enums.SeatStatus;
 import com.ticketfma.service.EventService;
 
 @ExtendWith(MockitoExtension.class)
 public class EventControllerTest {
 
-    private static final String VALID_EVENT_ID = "101";
-    private static final String INVALID_EVENT_ID = "999";
+    private static final String VALID_EVENT_ID = "3001";
+    private static final String INVALID_EVENT_ID = "9999";
 
     @InjectMocks
     private EventController eventController;
@@ -106,9 +107,9 @@ public class EventControllerTest {
 
     private List<Seat> getSeats() {
         return List.of(
-                Seat.builder().seatNumber("2").row("17").level("b").section("E").status("OPEN").sellRank(2).hasUpsells(false).build(),
-                Seat.builder().seatNumber("3").row("35").level("t").section("K").status("OPEN").sellRank(3).hasUpsells(false).build(),
-                Seat.builder().seatNumber("3").row("30").level("z").section("f").status("OPEN").sellRank(3).hasUpsells(false).build()
+                Seat.builder().seatNumber("2").row("17").level("b").section("E").status(SeatStatus.OPEN).sellRank(2).hasUpsells(false).build(),
+                Seat.builder().seatNumber("3").row("35").level("t").section("K").status(SeatStatus.OPEN).sellRank(3).hasUpsells(false).build(),
+                Seat.builder().seatNumber("3").row("30").level("z").section("f").status(SeatStatus.OPEN).sellRank(3).hasUpsells(false).build()
 
         );
     }
