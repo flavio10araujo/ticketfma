@@ -6,9 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,7 +35,7 @@ public class IEventRepository {
     private static final String SORT_BY_NAME = "name";
     private static final String SORT_BY_DATE = "date";
     private final List<Event> events = new ArrayList<>();
-    private final Map<String, List<Seat>> eventSeats = new HashMap<>();
+    private final ConcurrentHashMap<String, List<Seat>> eventSeats = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Lock> eventLocks = new ConcurrentHashMap<>();
 
     @PostConstruct
