@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -37,6 +38,7 @@ public class IEventRepository {
     private final List<Event> events = new ArrayList<>();
     private final ConcurrentHashMap<String, List<Seat>> eventSeats = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Lock> eventLocks = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, AtomicInteger> lockCounts = new ConcurrentHashMap<>();
 
     @PostConstruct
     public void loadCsvData() {
@@ -136,6 +138,8 @@ public class IEventRepository {
 
     public void reserveSeats(String eventId, List<SeatRequest> seatRequests) {
         Lock eventLock = eventLocks.computeIfAbsent(eventId, id -> new ReentrantLock());
+        AtomicInteger lockCount = lockCounts.computeIfAbsent(eventId, id -> new AtomicInteger(0));
+        lockCount.incrementAndGet();
         eventLock.lock();
 
         try {
@@ -157,6 +161,11 @@ public class IEventRepository {
             }
         } finally {
             eventLock.unlock();
+
+            if (lockCount.decrementAndGet() == 0) {
+                eventLocks.remove(eventId, eventLock);
+                lockCounts.remove(eventId, lockCount);
+            }
         }
     }
 }
