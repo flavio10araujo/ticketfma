@@ -17,12 +17,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.ticketfma.domain.Event;
-import com.ticketfma.domain.Seat;
-import com.ticketfma.domain.enums.SeatStatus;
-import com.ticketfma.dto.SeatRequest;
-import com.ticketfma.exception.EventNotFoundException;
-import com.ticketfma.service.EventService;
+import com.ticketfma.adapter.primary.controller.EventController;
+import com.ticketfma.adapter.primary.dto.SeatRequest;
+import com.ticketfma.domain.exception.EventNotFoundException;
+import com.ticketfma.domain.model.Event;
+import com.ticketfma.domain.model.Seat;
+import com.ticketfma.domain.model.enums.SeatStatus;
+import com.ticketfma.domain.service.EventService;
 
 @ExtendWith(MockitoExtension.class)
 public class EventControllerTest {

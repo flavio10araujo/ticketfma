@@ -1,6 +1,6 @@
-package com.ticketfma.domain;
+package com.ticketfma.domain.model;
 
-import com.ticketfma.domain.enums.SeatStatus;
+import com.ticketfma.domain.model.enums.SeatStatus;
 
 import lombok.Builder;
 import lombok.Data;

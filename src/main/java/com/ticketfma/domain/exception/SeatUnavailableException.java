@@ -1,4 +1,4 @@
-package com.ticketfma.exception;
+package com.ticketfma.domain.exception;
 
 import java.io.Serial;
 

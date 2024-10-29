@@ -1,4 +1,4 @@
-package com.ticketfma.config;
+package com.ticketfma.adapter.secondary.config;
 
 import java.util.concurrent.Executors;
 

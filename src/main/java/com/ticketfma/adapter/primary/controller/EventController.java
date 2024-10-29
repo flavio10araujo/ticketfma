@@ -1,4 +1,4 @@
-package com.ticketfma.controller;
+package com.ticketfma.adapter.primary.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ticketfma.domain.Event;
-import com.ticketfma.domain.Seat;
-import com.ticketfma.dto.SeatRequest;
-import com.ticketfma.service.EventService;
+import com.ticketfma.adapter.primary.dto.SeatRequest;
+import com.ticketfma.domain.model.Event;
+import com.ticketfma.domain.model.Seat;
+import com.ticketfma.domain.service.EventService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

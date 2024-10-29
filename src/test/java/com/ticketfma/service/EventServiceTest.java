@@ -15,12 +15,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.ticketfma.domain.Event;
-import com.ticketfma.domain.Seat;
-import com.ticketfma.domain.enums.SeatStatus;
-import com.ticketfma.dto.SeatRequest;
-import com.ticketfma.exception.EventNotFoundException;
-import com.ticketfma.repository.IEventRepository;
+import com.ticketfma.adapter.primary.dto.SeatRequest;
+import com.ticketfma.domain.exception.EventNotFoundException;
+import com.ticketfma.domain.model.Event;
+import com.ticketfma.domain.model.Seat;
+import com.ticketfma.domain.model.enums.SeatStatus;
+import com.ticketfma.domain.port.EventRepositoryPort;
+import com.ticketfma.domain.service.EventService;
 
 @ExtendWith(MockitoExtension.class)
 public class EventServiceTest {
@@ -32,7 +33,7 @@ public class EventServiceTest {
     private EventService eventService;
 
     @Mock
-    private IEventRepository repository;
+    private EventRepositoryPort repository;
 
     /* getAllEvents - BEGIN */
     @Test

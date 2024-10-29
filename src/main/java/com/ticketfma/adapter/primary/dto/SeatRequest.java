@@ -1,4 +1,4 @@
-package com.ticketfma.dto;
+package com.ticketfma.adapter.primary.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

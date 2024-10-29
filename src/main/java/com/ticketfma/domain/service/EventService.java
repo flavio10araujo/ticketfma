@@ -1,17 +1,17 @@
-package com.ticketfma.service;
+package com.ticketfma.domain.service;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.ticketfma.domain.Event;
-import com.ticketfma.domain.Seat;
-import com.ticketfma.dto.SeatRequest;
-import com.ticketfma.exception.EventNotFoundException;
-import com.ticketfma.exception.SeatNotExistException;
-import com.ticketfma.exception.SeatUnavailableException;
-import com.ticketfma.repository.IEventRepository;
+import com.ticketfma.adapter.primary.dto.SeatRequest;
+import com.ticketfma.domain.exception.EventNotFoundException;
+import com.ticketfma.domain.exception.SeatNotExistException;
+import com.ticketfma.domain.exception.SeatUnavailableException;
+import com.ticketfma.domain.model.Event;
+import com.ticketfma.domain.model.Seat;
+import com.ticketfma.domain.port.EventRepositoryPort;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class EventService {
 
-    private final IEventRepository repository;
+    private final EventRepositoryPort repository;
 
     public List<Event> getAllEvents(Optional<String> sortBy) {
         return repository.getAllEvents(sortBy);

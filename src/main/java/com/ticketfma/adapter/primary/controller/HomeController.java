@@ -1,4 +1,4 @@
-package com.ticketfma.controller;
+package com.ticketfma.adapter.primary.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
