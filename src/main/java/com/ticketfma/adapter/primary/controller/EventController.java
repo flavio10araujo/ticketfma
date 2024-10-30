@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ticketfma.adapter.primary.dto.SeatRequest;
 import com.ticketfma.domain.model.Event;
 import com.ticketfma.domain.model.Seat;
-import com.ticketfma.domain.service.EventService;
+import com.ticketfma.domain.port.EventServicePort;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Event controller")
 public class EventController {
 
-    private final EventService eventService;
+    private final EventServicePort eventService;
 
     @GetMapping("/v1/events")
     @Operation(summary = "Get all available events with optional sorting by event name or event date.")

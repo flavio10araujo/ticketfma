@@ -21,7 +21,7 @@ import com.ticketfma.domain.model.Event;
 import com.ticketfma.domain.model.Seat;
 import com.ticketfma.domain.model.enums.SeatStatus;
 import com.ticketfma.domain.port.EventRepositoryPort;
-import com.ticketfma.domain.service.EventService;
+import com.ticketfma.domain.service.EventServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 public class EventServiceTest {
@@ -30,7 +30,7 @@ public class EventServiceTest {
     private static final String INVALID_EVENT_ID = "999";
 
     @InjectMocks
-    private EventService eventService;
+    private EventServiceImpl eventService;
 
     @Mock
     private EventRepositoryPort repository;

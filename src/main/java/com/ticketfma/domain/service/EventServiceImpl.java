@@ -10,30 +10,35 @@ import com.ticketfma.domain.exception.SeatUnavailableException;
 import com.ticketfma.domain.model.Event;
 import com.ticketfma.domain.model.Seat;
 import com.ticketfma.domain.port.EventRepositoryPort;
+import com.ticketfma.domain.port.EventServicePort;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class EventService {
+public class EventServiceImpl implements EventServicePort {
 
     private final EventRepositoryPort repository;
 
+    @Override
     public List<Event> getAllEvents(Optional<String> sortBy) {
         return repository.getAllEvents(sortBy);
     }
 
+    @Override
     public Optional<Seat> getSeat(String eventId, SeatRequest seatRequest) {
         validateEventExists(eventId);
         return repository.getSeat(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
     }
 
+    @Override
     public List<Seat> getBestSeats(String eventId, int quantity) {
         validateEventExists(eventId);
         return repository.getBestSeats(eventId, quantity);
     }
 
+    @Override
     public void reserveSeats(String eventId, List<SeatRequest> seatRequests) {
         validateEventExists(eventId);
         validateSeatsExist(eventId, seatRequests);
