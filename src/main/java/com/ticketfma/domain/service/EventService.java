@@ -3,8 +3,6 @@ package com.ticketfma.domain.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
-
 import com.ticketfma.adapter.primary.dto.SeatRequest;
 import com.ticketfma.domain.exception.EventNotFoundException;
 import com.ticketfma.domain.exception.SeatNotExistException;
@@ -18,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-@Service
 public class EventService {
 
     private final EventRepositoryPort repository;
