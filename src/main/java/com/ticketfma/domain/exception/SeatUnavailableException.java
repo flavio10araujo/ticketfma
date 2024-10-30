@@ -2,10 +2,6 @@ package com.ticketfma.domain.exception;
 
 import java.io.Serial;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-@ResponseStatus(HttpStatus.CONFLICT)
 public class SeatUnavailableException extends RuntimeException {
 
     @Serial
