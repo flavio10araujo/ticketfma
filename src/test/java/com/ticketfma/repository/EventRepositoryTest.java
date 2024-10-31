@@ -82,7 +82,8 @@ public class EventRepositoryTest {
         Assertions.assertEquals(SeatStatus.HOLD, reservedSeat.get().getStatus(), "Seat should be on hold");
 
         // Ensure the locks were released and no locks remain.
-        //Assertions.assertFalse(eventRepository.getEventLocks().containsKey(eventId), "Lock should be removed after reservation attempts complete");
+        Assertions.assertFalse(eventRepository.getEventLocks().containsKey(eventId), "Lock should be removed after reservation attempts complete");
+        Assertions.assertFalse(eventRepository.getLockCounts().containsKey(eventId), "Lock count should be removed after reservation attempts complete");
 
         executorService.shutdown();
     }

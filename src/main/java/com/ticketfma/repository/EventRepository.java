@@ -20,6 +20,7 @@ import com.ticketfma.exception.SeatNotExistException;
 import com.ticketfma.exception.SeatUnavailableException;
 
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,8 +34,8 @@ public class EventRepository {
     private final CsvDataLoader csvDataLoader;
     private final List<Event> events = new ArrayList<>();
     private final ConcurrentHashMap<String, List<Seat>> eventSeats = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, Lock> eventLocks = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, AtomicInteger> lockCounts = new ConcurrentHashMap<>();
+    @Getter private final ConcurrentHashMap<String, Lock> eventLocks = new ConcurrentHashMap<>();
+    @Getter private final ConcurrentHashMap<String, AtomicInteger> lockCounts = new ConcurrentHashMap<>();
 
     @PostConstruct
     public void loadCsvData() {
