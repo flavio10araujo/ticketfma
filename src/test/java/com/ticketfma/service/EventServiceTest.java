@@ -20,7 +20,7 @@ import com.ticketfma.domain.Seat;
 import com.ticketfma.domain.enums.SeatStatus;
 import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.exception.EventNotFoundException;
-import com.ticketfma.repository.IEventRepository;
+import com.ticketfma.repository.EventRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class EventServiceTest {
@@ -32,7 +32,7 @@ public class EventServiceTest {
     private EventService eventService;
 
     @Mock
-    private IEventRepository repository;
+    private EventRepository repository;
 
     /* getAllEvents - BEGIN */
     @Test
