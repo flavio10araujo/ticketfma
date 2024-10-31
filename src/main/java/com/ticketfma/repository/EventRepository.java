@@ -38,7 +38,9 @@ public class EventRepository {
 
     @PostConstruct
     public void loadCsvData() {
-        csvDataLoader.loadCsvData(events, eventSeats);
+        csvDataLoader.loadCsvData();
+        events.addAll(csvDataLoader.getEvents());
+        eventSeats.putAll(csvDataLoader.getEventSeats());
     }
 
     public boolean eventExists(String eventId) {

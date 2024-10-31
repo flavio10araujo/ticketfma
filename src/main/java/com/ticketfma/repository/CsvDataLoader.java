@@ -17,19 +17,18 @@ import com.ticketfma.domain.Event;
 import com.ticketfma.domain.Seat;
 import com.ticketfma.domain.enums.SeatStatus;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Data
 @Component
 public class CsvDataLoader {
 
-    private List<Event> events;
-    private ConcurrentHashMap<String, List<Seat>> eventSeats;
+    private final List<Event> events = new ArrayList<>();
+    private final ConcurrentHashMap<String, List<Seat>> eventSeats = new ConcurrentHashMap<>();
 
-    public void loadCsvData(List<Event> events, ConcurrentHashMap<String, List<Seat>> eventSeats) {
-        this.events = events;
-        this.eventSeats = eventSeats;
-
+    public void loadCsvData() {
         try (CSVReader csvReader = new CSVReader(new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream("/data.csv"))))) {
             List<String[]> csvData = csvReader.readAll();
             processCsvData(csvData);
