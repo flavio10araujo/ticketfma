@@ -21,6 +21,8 @@ import com.ticketfma.service.EventService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -61,6 +63,12 @@ public class EventController {
     @PostMapping("/v1/events/{eventId}/reserve-seats")
     @Operation(summary = "Reserve seats for a specific event.")
     @Parameter(name = "eventId", description = "The ID of the event")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Seats reserved"),
+            @ApiResponse(responseCode = "404", description = "Event not found"),
+            @ApiResponse(responseCode = "400", description = "Seat does not exist"),
+            @ApiResponse(responseCode = "409", description = "Seat is unavailable")
+    })
     public ResponseEntity<Void> reserveSeats(@PathVariable String eventId, @RequestBody @Valid List<SeatRequest> seatRequests) {
         eventService.reserveSeats(eventId, seatRequests);
         return ResponseEntity.status(HttpStatus.CREATED).build();
