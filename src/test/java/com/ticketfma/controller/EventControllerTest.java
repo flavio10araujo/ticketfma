@@ -18,8 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.ticketfma.domain.Event;
-import com.ticketfma.domain.Seat;
 import com.ticketfma.domain.enums.SeatStatus;
+import com.ticketfma.dto.SeatDTO;
 import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.exception.EventNotFoundException;
 import com.ticketfma.service.impl.EventService;
@@ -80,10 +80,10 @@ public class EventControllerTest {
     @Test
     public void givenValidEventIdAndValidSeatRequest_whenGetSeat_thenReturnSeat() {
         SeatRequest seatRequest = getSeatRequest();
-        Seat seat = getSeats().getFirst();
+        SeatDTO seat = getSeats().getFirst();
         when(eventService.getSeat(VALID_EVENT_ID, seatRequest)).thenReturn(Optional.ofNullable(seat));
 
-        ResponseEntity<Seat> response = eventController.getSeat(VALID_EVENT_ID, seatRequest);
+        ResponseEntity<SeatDTO> response = eventController.getSeat(VALID_EVENT_ID, seatRequest);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(seat, response.getBody());
@@ -107,7 +107,7 @@ public class EventControllerTest {
         SeatRequest seatRequest = getSeatRequest();
         when(eventService.getSeat(VALID_EVENT_ID, seatRequest)).thenReturn(Optional.empty());
 
-        ResponseEntity<Seat> response = eventController.getSeat(VALID_EVENT_ID, seatRequest);
+        ResponseEntity<SeatDTO> response = eventController.getSeat(VALID_EVENT_ID, seatRequest);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         verify(eventService).getSeat(VALID_EVENT_ID, seatRequest);
@@ -117,10 +117,10 @@ public class EventControllerTest {
     /* getBestSeats - BEGIN */
     @Test
     public void givenValidEventIdAndValidQuantity_whenGetBestSeats_thenReturnBestSeats() {
-        List<Seat> seats = getSeats();
+        List<SeatDTO> seats = getSeats();
         when(eventService.getBestSeats(VALID_EVENT_ID, 5)).thenReturn(seats);
 
-        ResponseEntity<List<Seat>> response = eventController.getBestSeats(VALID_EVENT_ID, 5);
+        ResponseEntity<List<SeatDTO>> response = eventController.getBestSeats(VALID_EVENT_ID, 5);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(seats, response.getBody());
@@ -148,11 +148,11 @@ public class EventControllerTest {
         );
     }
 
-    private List<Seat> getSeats() {
+    private List<SeatDTO> getSeats() {
         return List.of(
-                Seat.builder().seatNumber("2").row("17").level("b").section("E").status(SeatStatus.OPEN).sellRank(2).hasUpsells(false).build(),
-                Seat.builder().seatNumber("3").row("35").level("t").section("K").status(SeatStatus.OPEN).sellRank(3).hasUpsells(false).build(),
-                Seat.builder().seatNumber("3").row("30").level("z").section("f").status(SeatStatus.OPEN).sellRank(3).hasUpsells(false).build()
+                SeatDTO.builder().seatNumber("2").row("17").level("b").section("E").status(SeatStatus.OPEN).build(),
+                SeatDTO.builder().seatNumber("3").row("35").level("t").section("K").status(SeatStatus.OPEN).build(),
+                SeatDTO.builder().seatNumber("3").row("30").level("z").section("f").status(SeatStatus.OPEN).build()
 
         );
     }

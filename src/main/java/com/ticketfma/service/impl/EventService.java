@@ -2,15 +2,18 @@ package com.ticketfma.service.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.ticketfma.domain.Event;
 import com.ticketfma.domain.Seat;
+import com.ticketfma.dto.SeatDTO;
 import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.exception.EventNotFoundException;
 import com.ticketfma.exception.SeatNotExistException;
 import com.ticketfma.exception.SeatUnavailableException;
+import com.ticketfma.mapper.SeatMapper;
 import com.ticketfma.repository.IEventRepository;
 import com.ticketfma.service.IEventService;
 
@@ -30,15 +33,19 @@ public class EventService implements IEventService {
     }
 
     @Override
-    public Optional<Seat> getSeat(String eventId, SeatRequest seatRequest) {
+    public Optional<SeatDTO> getSeat(String eventId, SeatRequest seatRequest) {
         validateEventExists(eventId);
-        return repository.getSeat(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
+        Optional<Seat> seat = repository.getSeat(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
+        return seat.map(SeatMapper::toSeatDTO);
     }
 
     @Override
-    public List<Seat> getBestSeats(String eventId, int quantity) {
+    public List<SeatDTO> getBestSeats(String eventId, int quantity) {
         validateEventExists(eventId);
-        return repository.getBestSeats(eventId, quantity);
+        List<Seat> seats = repository.getBestSeats(eventId, quantity);
+        return seats.stream()
+                .map(SeatMapper::toSeatDTO)
+                .collect(Collectors.toList());
     }
 
     @Override

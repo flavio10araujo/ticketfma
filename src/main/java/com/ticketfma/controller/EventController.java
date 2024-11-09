@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ticketfma.domain.Event;
-import com.ticketfma.domain.Seat;
+import com.ticketfma.dto.SeatDTO;
 import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.service.IEventService;
 
@@ -46,8 +46,8 @@ public class EventController {
     @PostMapping("/v1/events/{eventId}/search-seat")
     @Operation(summary = "Get a specific seat for a specific event.")
     @Parameter(name = "eventId", description = "The ID of the event")
-    public ResponseEntity<Seat> getSeat(@PathVariable String eventId, @RequestBody @Valid SeatRequest seatRequest) {
-        Optional<Seat> optionalSeat = eventService.getSeat(eventId, seatRequest);
+    public ResponseEntity<SeatDTO> getSeat(@PathVariable String eventId, @RequestBody @Valid SeatRequest seatRequest) {
+        Optional<SeatDTO> optionalSeat = eventService.getSeat(eventId, seatRequest);
         return optionalSeat.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
@@ -55,8 +55,8 @@ public class EventController {
     @GetMapping("/v1/events/{eventId}/best-seats")
     @Operation(summary = "Get best seats for a specific event.")
     @Parameter(name = "eventId", description = "The ID of the event")
-    public ResponseEntity<List<Seat>> getBestSeats(@PathVariable String eventId, @RequestParam @Min(1) int quantity) {
-        List<Seat> bestSeats = eventService.getBestSeats(eventId, quantity);
+    public ResponseEntity<List<SeatDTO>> getBestSeats(@PathVariable String eventId, @RequestParam @Min(1) int quantity) {
+        List<SeatDTO> bestSeats = eventService.getBestSeats(eventId, quantity);
         return ResponseEntity.ok(bestSeats);
     }
 

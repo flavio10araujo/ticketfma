@@ -81,7 +81,7 @@ public class EventControllerIT {
                 .andReturn().getResponse().getContentAsString();
 
         assertThat(responseContent).contains(
-                "{\"seatNumber\":\"33\",\"row\":\"C1\",\"level\":\"C\",\"section\":\"S3\",\"status\":\"HOLD\",\"sellRank\":3,\"hasUpsells\":false}"
+                "{\"seatNumber\":\"33\",\"row\":\"C1\",\"level\":\"C\",\"section\":\"S3\",\"status\":\"HOLD\"}"
         );
     }
 
@@ -114,8 +114,8 @@ public class EventControllerIT {
                 .andReturn().getResponse().getContentAsString();
 
         assertThat(responseContent).contains(
-                "{\"seatNumber\":\"32\",\"row\":\"C1\",\"level\":\"C\",\"section\":\"S3\",\"status\":\"OPEN\",\"sellRank\":2,\"hasUpsells\":false}",
-                "{\"seatNumber\":\"31\",\"row\":\"C1\",\"level\":\"C\",\"section\":\"S3\",\"status\":\"OPEN\",\"sellRank\":4,\"hasUpsells\":false}"
+                "{\"seatNumber\":\"32\",\"row\":\"C1\",\"level\":\"C\",\"section\":\"S3\",\"status\":\"OPEN\"}",
+                "{\"seatNumber\":\"31\",\"row\":\"C1\",\"level\":\"C\",\"section\":\"S3\",\"status\":\"OPEN\"}"
         );
     }
 
@@ -172,7 +172,7 @@ public class EventControllerIT {
 
         // Checking if the seat is available.
         assertThat(responseContentBefore).contains(
-                "{\"seatNumber\":\"40\",\"row\":\"D1\",\"level\":\"D\",\"section\":\"S4\",\"status\":\"OPEN\",\"sellRank\":4,\"hasUpsells\":false}"
+                "{\"seatNumber\":\"40\",\"row\":\"D1\",\"level\":\"D\",\"section\":\"S4\",\"status\":\"OPEN\"}"
         );
 
         mockMvc.perform(post(URI_GET_EVENTS + "/4001" + URI_RESERVE_SEATS_SUFFIX)
@@ -188,7 +188,7 @@ public class EventControllerIT {
 
         // Checking if the seat is now on HOLD.
         assertThat(responseContentAfter).contains(
-                "{\"seatNumber\":\"40\",\"row\":\"D1\",\"level\":\"D\",\"section\":\"S4\",\"status\":\"HOLD\",\"sellRank\":4,\"hasUpsells\":false}"
+                "{\"seatNumber\":\"40\",\"row\":\"D1\",\"level\":\"D\",\"section\":\"S4\",\"status\":\"HOLD\"}"
         );
     }
     /* /v1/events/{eventId}/reserve-seats - END */

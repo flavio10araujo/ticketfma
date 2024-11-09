@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.ticketfma.domain.Event;
 import com.ticketfma.domain.Seat;
 import com.ticketfma.domain.enums.SeatStatus;
+import com.ticketfma.dto.SeatDTO;
 import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.exception.EventNotFoundException;
 import com.ticketfma.repository.impl.EventRepository;
@@ -91,9 +92,9 @@ public class EventServiceTest {
         when(repository.getSeat(VALID_EVENT_ID, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(),
                 seatRequest.getSection())).thenReturn(Optional.ofNullable(seat));
 
-        Seat seatReturned = eventService.getSeat(VALID_EVENT_ID, seatRequest).get();
+        SeatDTO seatReturned = eventService.getSeat(VALID_EVENT_ID, seatRequest).get();
 
-        assertEquals(seat, seatReturned);
+        isSameSeat(seat, seatReturned);
         verify(repository).getSeat(VALID_EVENT_ID, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
     }
 
@@ -104,7 +105,7 @@ public class EventServiceTest {
         when(repository.getSeat(VALID_EVENT_ID, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(),
                 seatRequest.getSection())).thenReturn(Optional.empty());
 
-        Optional<Seat> seatReturned = eventService.getSeat(VALID_EVENT_ID, seatRequest);
+        Optional<SeatDTO> seatReturned = eventService.getSeat(VALID_EVENT_ID, seatRequest);
 
         assertEquals(Optional.empty(), seatReturned);
         verify(repository).getSeat(VALID_EVENT_ID, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
@@ -129,9 +130,12 @@ public class EventServiceTest {
         when(repository.eventExists(VALID_EVENT_ID)).thenReturn(true);
         when(repository.getBestSeats(VALID_EVENT_ID, 5)).thenReturn(seats);
 
-        List<Seat> bestSeats = eventService.getBestSeats(VALID_EVENT_ID, 5);
+        List<SeatDTO> bestSeats = eventService.getBestSeats(VALID_EVENT_ID, 5);
 
-        assertEquals(seats, bestSeats);
+        assertEquals(seats.size(), bestSeats.size());
+        for (int i = 0; i < seats.size(); i++) {
+            isSameSeat(seats.get(i), bestSeats.get(i));
+        }
         verify(repository).getBestSeats(VALID_EVENT_ID, 5);
     }
     /* getBestSeats - END */
@@ -158,6 +162,14 @@ public class EventServiceTest {
         verify(repository).reserveSeats(VALID_EVENT_ID, seatRequests);
     }
     /* reserveSeats - END */
+
+    private void isSameSeat(Seat seat, SeatDTO seatDTO) {
+        assertEquals(seat.getSeatNumber(), seatDTO.getSeatNumber());
+        assertEquals(seat.getRow(), seatDTO.getRow());
+        assertEquals(seat.getLevel(), seatDTO.getLevel());
+        assertEquals(seat.getSection(), seatDTO.getSection());
+        assertEquals(seat.getStatus(), seatDTO.getStatus());
+    }
 
     /* stubs - BEGIN */
     private List<Event> getEvents() {
