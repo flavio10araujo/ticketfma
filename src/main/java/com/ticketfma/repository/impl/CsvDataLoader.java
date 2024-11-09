@@ -1,4 +1,4 @@
-package com.ticketfma.repository;
+package com.ticketfma.repository.impl;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

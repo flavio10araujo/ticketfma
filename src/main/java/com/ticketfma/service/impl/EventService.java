@@ -11,7 +11,7 @@ import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.exception.EventNotFoundException;
 import com.ticketfma.exception.SeatNotExistException;
 import com.ticketfma.exception.SeatUnavailableException;
-import com.ticketfma.repository.EventRepository;
+import com.ticketfma.repository.IEventRepository;
 import com.ticketfma.service.IEventService;
 
 import lombok.RequiredArgsConstructor;
@@ -21,8 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 public class EventService implements IEventService {
-    
-    private final EventRepository repository;
+
+    private final IEventRepository repository;
 
     @Override
     public List<Event> getAllEvents(String sortBy) {

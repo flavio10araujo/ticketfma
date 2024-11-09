@@ -1,4 +1,4 @@
-package com.ticketfma.repository;
+package com.ticketfma.repository.impl;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -18,6 +18,7 @@ import com.ticketfma.domain.enums.SeatStatus;
 import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.exception.SeatNotExistException;
 import com.ticketfma.exception.SeatUnavailableException;
+import com.ticketfma.repository.IEventRepository;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
@@ -27,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @Repository
-public class EventRepository {
+public class EventRepository implements IEventRepository {
 
     private static final String SORT_BY_NAME = "name";
     private static final String SORT_BY_DATE = "date";
@@ -44,22 +45,26 @@ public class EventRepository {
         eventSeats.putAll(csvDataLoader.getEventSeats());
     }
 
+    @Override
     public boolean eventExists(String eventId) {
         return eventSeats.containsKey(eventId);
     }
 
+    @Override
     public boolean seatExists(String eventId, String seatNumber, String row, String level, String section) {
         return eventSeats.get(eventId).stream()
                 .anyMatch(seat -> seat.getSeatNumber().equals(seatNumber) && seat.getRow().equals(row) && seat.getLevel().equals(level) && seat.getSection()
                         .equals(section));
     }
 
+    @Override
     public boolean seatAvailable(String eventId, String seatNumber, String row, String level, String section) {
         return eventSeats.get(eventId).stream()
                 .anyMatch(seat -> seat.getSeatNumber().equals(seatNumber) && seat.getRow().equals(row) && seat.getLevel().equals(level) && seat.getSection()
                         .equals(section) && seat.getStatus() == SeatStatus.OPEN);
     }
 
+    @Override
     public List<Event> getAllEvents(String sortBy) {
         return events.stream()
                 .sorted((e1, e2) -> {
@@ -75,6 +80,7 @@ public class EventRepository {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public Optional<Seat> getSeat(String eventId, String seatNumber, String row, String level, String section) {
         return eventSeats.get(eventId).stream()
                 .filter(seat -> seat.getSeatNumber().equals(seatNumber) && seat.getRow().equals(row) && seat.getLevel().equals(level) && seat.getSection()
@@ -82,6 +88,7 @@ public class EventRepository {
                 .findFirst();
     }
 
+    @Override
     public List<Seat> getBestSeats(String eventId, int quantity) {
         return eventSeats.get(eventId).stream()
                 .filter(seat -> seat.getStatus() == SeatStatus.OPEN)
@@ -90,6 +97,7 @@ public class EventRepository {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public void reserveSeats(String eventId, List<SeatRequest> seatRequests) {
         Lock eventLock = eventLocks.computeIfAbsent(eventId, id -> new ReentrantLock());
         AtomicInteger lockCount = lockCounts.computeIfAbsent(eventId, id -> new AtomicInteger(0));

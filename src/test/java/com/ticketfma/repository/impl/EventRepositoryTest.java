@@ -1,4 +1,4 @@
-package com.ticketfma.repository;
+package com.ticketfma.repository.impl;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
