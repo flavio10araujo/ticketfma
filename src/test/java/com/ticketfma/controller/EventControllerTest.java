@@ -17,8 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.ticketfma.domain.Event;
 import com.ticketfma.domain.enums.SeatStatus;
+import com.ticketfma.dto.EventDTO;
 import com.ticketfma.dto.SeatDTO;
 import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.exception.EventNotFoundException;
@@ -41,10 +41,10 @@ public class EventControllerTest {
     /* getEvents - BEGIN */
     @Test
     public void givenNoSort_whenGetEvents_thenReturnAllEvents() {
-        List<Event> events = getEvents();
+        List<EventDTO> events = getEvents();
         when(eventService.getAllEvents(null)).thenReturn(events);
 
-        ResponseEntity<List<Event>> response = eventController.getEvents(Optional.empty());
+        ResponseEntity<List<EventDTO>> response = eventController.getEvents(Optional.empty());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(events, response.getBody());
@@ -53,10 +53,10 @@ public class EventControllerTest {
 
     @Test
     public void givenSortByName_whenGetEvents_thenReturnAllEventsSortedByName() {
-        List<Event> events = getEvents();
+        List<EventDTO> events = getEvents();
         when(eventService.getAllEvents(SORT_BY_NAME)).thenReturn(events);
 
-        ResponseEntity<List<Event>> response = eventController.getEvents(Optional.of(SORT_BY_NAME));
+        ResponseEntity<List<EventDTO>> response = eventController.getEvents(Optional.of(SORT_BY_NAME));
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(events, response.getBody());
@@ -65,10 +65,10 @@ public class EventControllerTest {
 
     @Test
     public void givenSortByDate_whenGetEvents_thenReturnAllEventsSortedByDate() {
-        List<Event> events = getEvents();
+        List<EventDTO> events = getEvents();
         when(eventService.getAllEvents(SORT_BY_DATE)).thenReturn(events);
 
-        ResponseEntity<List<Event>> response = eventController.getEvents(Optional.of(SORT_BY_DATE));
+        ResponseEntity<List<EventDTO>> response = eventController.getEvents(Optional.of(SORT_BY_DATE));
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(events, response.getBody());
@@ -140,11 +140,11 @@ public class EventControllerTest {
     /* getBestSeats - END */
 
     /* stubs - BEGIN */
-    private List<Event> getEvents() {
+    private List<EventDTO> getEvents() {
         return List.of(
-                Event.builder().eventId("1").eventDate(LocalDate.parse("2022-01-01")).name("Event 001").build(),
-                Event.builder().eventId("2").eventDate(LocalDate.parse("2022-01-02")).name("Event 002").build(),
-                Event.builder().eventId("3").eventDate(LocalDate.parse("2022-01-03")).name("Event 003").build()
+                EventDTO.builder().eventId("1").eventDate(LocalDate.parse("2022-01-01")).name("Event 001").build(),
+                EventDTO.builder().eventId("2").eventDate(LocalDate.parse("2022-01-02")).name("Event 002").build(),
+                EventDTO.builder().eventId("3").eventDate(LocalDate.parse("2022-01-03")).name("Event 003").build()
         );
     }
 

@@ -8,11 +8,13 @@ import org.springframework.stereotype.Service;
 
 import com.ticketfma.domain.Event;
 import com.ticketfma.domain.Seat;
+import com.ticketfma.dto.EventDTO;
 import com.ticketfma.dto.SeatDTO;
 import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.exception.EventNotFoundException;
 import com.ticketfma.exception.SeatNotExistException;
 import com.ticketfma.exception.SeatUnavailableException;
+import com.ticketfma.mapper.EventMapper;
 import com.ticketfma.mapper.SeatMapper;
 import com.ticketfma.repository.IEventRepository;
 import com.ticketfma.service.IEventService;
@@ -28,8 +30,11 @@ public class EventService implements IEventService {
     private final IEventRepository repository;
 
     @Override
-    public List<Event> getAllEvents(String sortBy) {
-        return repository.getAllEvents(sortBy);
+    public List<EventDTO> getAllEvents(String sortBy) {
+        List<Event> events = repository.getAllEvents(sortBy);
+        return events.stream()
+                .map(EventMapper::toEventDTO)
+                .collect(Collectors.toList());
     }
 
     @Override

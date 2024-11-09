@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ticketfma.domain.Event;
+import com.ticketfma.dto.EventDTO;
 import com.ticketfma.dto.SeatDTO;
 import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.service.IEventService;
@@ -38,8 +38,8 @@ public class EventController {
 
     @GetMapping("/v1/events")
     @Operation(summary = "Get all available events with optional sorting by event name or event date.")
-    public ResponseEntity<List<Event>> getEvents(@RequestParam Optional<String> sort) {
-        List<Event> events = eventService.getAllEvents(sort.orElse(null));
+    public ResponseEntity<List<EventDTO>> getEvents(@RequestParam Optional<String> sort) {
+        List<EventDTO> events = eventService.getAllEvents(sort.orElse(null));
         return ResponseEntity.ok(events);
     }
 

@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.ticketfma.domain.Event;
 import com.ticketfma.domain.Seat;
 import com.ticketfma.domain.enums.SeatStatus;
+import com.ticketfma.dto.EventDTO;
 import com.ticketfma.dto.SeatDTO;
 import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.exception.EventNotFoundException;
@@ -43,9 +44,12 @@ public class EventServiceTest {
         List<Event> events = getEvents();
         when(repository.getAllEvents(null)).thenReturn(events);
 
-        List<Event> allEvents = eventService.getAllEvents(null);
+        List<EventDTO> allEvents = eventService.getAllEvents(null);
 
-        assertEquals(events, allEvents);
+        assertEquals(events.size(), allEvents.size());
+        for (int i = 0; i < events.size(); i++) {
+            isSameEvent(events.get(i), allEvents.get(i));
+        }
         verify(repository).getAllEvents(null);
     }
 
@@ -54,9 +58,12 @@ public class EventServiceTest {
         List<Event> events = getEvents();
         when(repository.getAllEvents(SORT_BY_NAME)).thenReturn(events);
 
-        List<Event> eventsSortedByName = eventService.getAllEvents(SORT_BY_NAME);
+        List<EventDTO> eventsSortedByName = eventService.getAllEvents(SORT_BY_NAME);
 
-        assertEquals(events, eventsSortedByName);
+        assertEquals(events.size(), eventsSortedByName.size());
+        for (int i = 0; i < events.size(); i++) {
+            isSameEvent(events.get(i), eventsSortedByName.get(i));
+        }
         verify(repository).getAllEvents(SORT_BY_NAME);
     }
 
@@ -65,9 +72,12 @@ public class EventServiceTest {
         List<Event> events = getEvents();
         when(repository.getAllEvents(SORT_BY_DATE)).thenReturn(events);
 
-        List<Event> eventsSortedByDate = eventService.getAllEvents(SORT_BY_DATE);
+        List<EventDTO> eventsSortedByDate = eventService.getAllEvents(SORT_BY_DATE);
 
-        assertEquals(events, eventsSortedByDate);
+        assertEquals(events.size(), eventsSortedByDate.size());
+        for (int i = 0; i < events.size(); i++) {
+            isSameEvent(events.get(i), eventsSortedByDate.get(i));
+        }
         verify(repository).getAllEvents(SORT_BY_DATE);
     }
     /* getAllEvents - END */
@@ -162,6 +172,12 @@ public class EventServiceTest {
         verify(repository).reserveSeats(VALID_EVENT_ID, seatRequests);
     }
     /* reserveSeats - END */
+
+    private void isSameEvent(Event event, EventDTO eventDTO) {
+        assertEquals(event.getEventId(), eventDTO.getEventId());
+        assertEquals(event.getName(), eventDTO.getName());
+        assertEquals(event.getEventDate(), eventDTO.getEventDate());
+    }
 
     private void isSameSeat(Seat seat, SeatDTO seatDTO) {
         assertEquals(seat.getSeatNumber(), seatDTO.getSeatNumber());
