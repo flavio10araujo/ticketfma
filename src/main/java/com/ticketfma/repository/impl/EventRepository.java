@@ -16,7 +16,7 @@ import com.ticketfma.domain.Event;
 import com.ticketfma.domain.Seat;
 import com.ticketfma.domain.enums.SeatStatus;
 import com.ticketfma.dto.SeatRequest;
-import com.ticketfma.exception.SeatNotExistException;
+import com.ticketfma.exception.SeatNotFoundException;
 import com.ticketfma.exception.SeatUnavailableException;
 import com.ticketfma.repository.IEventRepository;
 
@@ -118,7 +118,7 @@ public class EventRepository implements IEventRepository {
                     Seat seat = optionalSeat.get();
                     seat.setStatus(SeatStatus.HOLD);
                 } else {
-                    throw new SeatNotExistException(seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
+                    throw new SeatNotFoundException(seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
                 }
             }
         } finally {

@@ -12,7 +12,7 @@ import com.ticketfma.dto.EventDTO;
 import com.ticketfma.dto.SeatDTO;
 import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.exception.EventNotFoundException;
-import com.ticketfma.exception.SeatNotExistException;
+import com.ticketfma.exception.SeatNotFoundException;
 import com.ticketfma.exception.SeatUnavailableException;
 import com.ticketfma.mapper.EventMapper;
 import com.ticketfma.mapper.SeatMapper;
@@ -39,14 +39,20 @@ public class EventService implements IEventService {
 
     @Override
     public Optional<SeatDTO> getSeat(String eventId, SeatRequest seatRequest) {
-        validateEventExists(eventId);
+        if (!isEventExists(eventId)) {
+            throw new EventNotFoundException(eventId);
+        }
+
         Optional<Seat> seat = repository.getSeat(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
         return seat.map(SeatMapper::toSeatDTO);
     }
 
     @Override
     public List<SeatDTO> getBestSeats(String eventId, int quantity) {
-        validateEventExists(eventId);
+        if (!isEventExists(eventId)) {
+            throw new EventNotFoundException(eventId);
+        }
+
         List<Seat> seats = repository.getBestSeats(eventId, quantity);
         return seats.stream()
                 .map(SeatMapper::toSeatDTO)
@@ -55,36 +61,49 @@ public class EventService implements IEventService {
 
     @Override
     public void reserveSeats(String eventId, List<SeatRequest> seatRequests) {
-        validateEventExists(eventId);
-        validateSeatsExist(eventId, seatRequests);
-        validateSeatsAvailable(eventId, seatRequests);
-        repository.reserveSeats(eventId, seatRequests);
-    }
-
-    private void validateEventExists(String eventId) {
-        if (!repository.eventExists(eventId)) {
-            log.warn("Event with id {} not found", eventId);
+        if (!isEventExists(eventId)) {
             throw new EventNotFoundException(eventId);
         }
-    }
 
-    private void validateSeatsExist(String eventId, List<SeatRequest> seatRequests) {
         for (SeatRequest seatRequest : seatRequests) {
-            if (!repository.seatExists(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection())) {
-                log.warn("Seat '{}' in row '{}' in level '{}' in section '{}' does not exist", seatRequest.getSeatNumber(), seatRequest.getRow(),
-                        seatRequest.getLevel(), seatRequest.getSection());
-                throw new SeatNotExistException(seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
+            if (!isSeatRequestExists(eventId, seatRequest)) {
+                throw new SeatNotFoundException(seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
             }
-        }
-    }
 
-    private void validateSeatsAvailable(String eventId, List<SeatRequest> seatRequests) {
-        for (SeatRequest seatRequest : seatRequests) {
-            if (!repository.seatAvailable(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection())) {
-                log.warn("Seat '{}' in row '{}' in level '{}' in section '{}' is already reserved", seatRequest.getSeatNumber(), seatRequest.getRow(),
-                        seatRequest.getLevel(), seatRequest.getSection());
+            if (!isSeatRequestAvailable(eventId, seatRequest)) {
                 throw new SeatUnavailableException(seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
             }
         }
+
+        repository.reserveSeats(eventId, seatRequests);
+    }
+
+    private boolean isEventExists(String eventId) {
+        if (!repository.eventExists(eventId)) {
+            log.warn("Event with id {} not found", eventId);
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isSeatRequestExists(String eventId, SeatRequest seatRequest) {
+        if (!repository.seatExists(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection())) {
+            log.warn("Seat '{}' in row '{}' in level '{}' in section '{}' does not exist", seatRequest.getSeatNumber(), seatRequest.getRow(),
+                    seatRequest.getLevel(), seatRequest.getSection());
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isSeatRequestAvailable(String eventId, SeatRequest seatRequest) {
+        if (!repository.seatAvailable(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection())) {
+            log.warn("Seat '{}' in row '{}' in level '{}' in section '{}' is already reserved", seatRequest.getSeatNumber(), seatRequest.getRow(),
+                    seatRequest.getLevel(), seatRequest.getSection());
+            return false;
+        }
+
+        return true;
     }
 }

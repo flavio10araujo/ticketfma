@@ -6,12 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class SeatNotExistException extends RuntimeException {
+public class SeatNotFoundException extends RuntimeException {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public SeatNotExistException(String seatNumber, String row, String level, String section) {
+    public SeatNotFoundException(String seatNumber, String row, String level, String section) {
         super(String.format("Seat '%s' in row '%s' in level '%s' in section '%s' does not exist.", seatNumber, row, level, section));
     }
 }
