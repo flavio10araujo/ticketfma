@@ -1,4 +1,4 @@
-package com.ticketfma.service;
+package com.ticketfma.service.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +12,7 @@ import com.ticketfma.exception.EventNotFoundException;
 import com.ticketfma.exception.SeatNotExistException;
 import com.ticketfma.exception.SeatUnavailableException;
 import com.ticketfma.repository.EventRepository;
+import com.ticketfma.service.IEventService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,24 +20,28 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class EventService {
-
+public class EventService implements IEventService {
+    
     private final EventRepository repository;
 
-    public List<Event> getAllEvents(Optional<String> sortBy) {
+    @Override
+    public List<Event> getAllEvents(String sortBy) {
         return repository.getAllEvents(sortBy);
     }
 
+    @Override
     public Optional<Seat> getSeat(String eventId, SeatRequest seatRequest) {
         validateEventExists(eventId);
         return repository.getSeat(eventId, seatRequest.getSeatNumber(), seatRequest.getRow(), seatRequest.getLevel(), seatRequest.getSection());
     }
 
+    @Override
     public List<Seat> getBestSeats(String eventId, int quantity) {
         validateEventExists(eventId);
         return repository.getBestSeats(eventId, quantity);
     }
 
+    @Override
     public void reserveSeats(String eventId, List<SeatRequest> seatRequests) {
         validateEventExists(eventId);
         validateSeatsExist(eventId, seatRequests);

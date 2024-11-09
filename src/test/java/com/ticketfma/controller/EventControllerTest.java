@@ -22,13 +22,15 @@ import com.ticketfma.domain.Seat;
 import com.ticketfma.domain.enums.SeatStatus;
 import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.exception.EventNotFoundException;
-import com.ticketfma.service.EventService;
+import com.ticketfma.service.impl.EventService;
 
 @ExtendWith(MockitoExtension.class)
 public class EventControllerTest {
 
     private static final String VALID_EVENT_ID = "3001";
     private static final String INVALID_EVENT_ID = "9999";
+    private static final String SORT_BY_NAME = "name";
+    private static final String SORT_BY_DATE = "date";
 
     @InjectMocks
     private EventController eventController;
@@ -40,37 +42,37 @@ public class EventControllerTest {
     @Test
     public void givenNoSort_whenGetEvents_thenReturnAllEvents() {
         List<Event> events = getEvents();
-        when(eventService.getAllEvents(Optional.empty())).thenReturn(events);
+        when(eventService.getAllEvents(null)).thenReturn(events);
 
         ResponseEntity<List<Event>> response = eventController.getEvents(Optional.empty());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(events, response.getBody());
-        verify(eventService).getAllEvents(Optional.empty());
+        verify(eventService).getAllEvents(null);
     }
 
     @Test
     public void givenSortByName_whenGetEvents_thenReturnAllEventsSortedByName() {
         List<Event> events = getEvents();
-        when(eventService.getAllEvents(Optional.of("name"))).thenReturn(events);
+        when(eventService.getAllEvents(SORT_BY_NAME)).thenReturn(events);
 
-        ResponseEntity<List<Event>> response = eventController.getEvents(Optional.of("name"));
+        ResponseEntity<List<Event>> response = eventController.getEvents(Optional.of(SORT_BY_NAME));
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(events, response.getBody());
-        verify(eventService).getAllEvents(Optional.of("name"));
+        verify(eventService).getAllEvents(SORT_BY_NAME);
     }
 
     @Test
     public void givenSortByDate_whenGetEvents_thenReturnAllEventsSortedByDate() {
         List<Event> events = getEvents();
-        when(eventService.getAllEvents(Optional.of("date"))).thenReturn(events);
+        when(eventService.getAllEvents(SORT_BY_DATE)).thenReturn(events);
 
-        ResponseEntity<List<Event>> response = eventController.getEvents(Optional.of("date"));
+        ResponseEntity<List<Event>> response = eventController.getEvents(Optional.of(SORT_BY_DATE));
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(events, response.getBody());
-        verify(eventService).getAllEvents(Optional.of("date"));
+        verify(eventService).getAllEvents(SORT_BY_DATE);
     }
     /* getEvents - END */
 

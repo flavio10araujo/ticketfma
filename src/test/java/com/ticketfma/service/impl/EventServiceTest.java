@@ -1,4 +1,4 @@
-package com.ticketfma.service;
+package com.ticketfma.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -27,6 +27,8 @@ public class EventServiceTest {
 
     private static final String VALID_EVENT_ID = "101";
     private static final String INVALID_EVENT_ID = "999";
+    private static final String SORT_BY_NAME = "name";
+    private static final String SORT_BY_DATE = "date";
 
     @InjectMocks
     private EventService eventService;
@@ -38,34 +40,34 @@ public class EventServiceTest {
     @Test
     public void givenNoSort_whenGetAllEvents_thenReturnAllEvents() {
         List<Event> events = getEvents();
-        when(repository.getAllEvents(Optional.empty())).thenReturn(events);
+        when(repository.getAllEvents(null)).thenReturn(events);
 
-        List<Event> allEvents = eventService.getAllEvents(Optional.empty());
+        List<Event> allEvents = eventService.getAllEvents(null);
 
         assertEquals(events, allEvents);
-        verify(repository).getAllEvents(Optional.empty());
+        verify(repository).getAllEvents(null);
     }
 
     @Test
     public void givenSortByName_whenGetAllEvents_thenReturnAllEventsSortedByName() {
         List<Event> events = getEvents();
-        when(repository.getAllEvents(Optional.of("name"))).thenReturn(events);
+        when(repository.getAllEvents(SORT_BY_NAME)).thenReturn(events);
 
-        List<Event> eventsSortedByName = eventService.getAllEvents(Optional.of("name"));
+        List<Event> eventsSortedByName = eventService.getAllEvents(SORT_BY_NAME);
 
         assertEquals(events, eventsSortedByName);
-        verify(repository).getAllEvents(Optional.of("name"));
+        verify(repository).getAllEvents(SORT_BY_NAME);
     }
 
     @Test
     public void givenSortByDate_whenGetAllEvents_thenReturnAllEventsSortedByDate() {
         List<Event> events = getEvents();
-        when(repository.getAllEvents(Optional.of("date"))).thenReturn(events);
+        when(repository.getAllEvents(SORT_BY_DATE)).thenReturn(events);
 
-        List<Event> eventsSortedByDate = eventService.getAllEvents(Optional.of("date"));
+        List<Event> eventsSortedByDate = eventService.getAllEvents(SORT_BY_DATE);
 
         assertEquals(events, eventsSortedByDate);
-        verify(repository).getAllEvents(Optional.of("date"));
+        verify(repository).getAllEvents(SORT_BY_DATE);
     }
     /* getAllEvents - END */
 
