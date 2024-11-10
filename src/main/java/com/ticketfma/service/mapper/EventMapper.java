@@ -1,4 +1,4 @@
-package com.ticketfma.mapper;
+package com.ticketfma.service.mapper;
 
 import com.ticketfma.model.Event;
 import com.ticketfma.model.dto.EventDTO;

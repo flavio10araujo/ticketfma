@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import com.ticketfma.exception.EventNotFoundException;
 import com.ticketfma.exception.SeatNotFoundException;
 import com.ticketfma.exception.SeatUnavailableException;
-import com.ticketfma.mapper.EventMapper;
-import com.ticketfma.mapper.SeatMapper;
 import com.ticketfma.model.Event;
 import com.ticketfma.model.Seat;
 import com.ticketfma.model.dto.EventDTO;
@@ -18,6 +16,8 @@ import com.ticketfma.model.dto.SeatDTO;
 import com.ticketfma.model.dto.SeatRequest;
 import com.ticketfma.repository.IEventRepository;
 import com.ticketfma.service.IEventService;
+import com.ticketfma.service.mapper.EventMapper;
+import com.ticketfma.service.mapper.SeatMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
