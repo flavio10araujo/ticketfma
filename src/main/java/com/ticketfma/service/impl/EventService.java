@@ -6,16 +6,16 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.ticketfma.domain.Event;
-import com.ticketfma.domain.Seat;
-import com.ticketfma.dto.EventDTO;
-import com.ticketfma.dto.SeatDTO;
-import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.exception.EventNotFoundException;
 import com.ticketfma.exception.SeatNotFoundException;
 import com.ticketfma.exception.SeatUnavailableException;
 import com.ticketfma.mapper.EventMapper;
 import com.ticketfma.mapper.SeatMapper;
+import com.ticketfma.model.Event;
+import com.ticketfma.model.Seat;
+import com.ticketfma.model.dto.EventDTO;
+import com.ticketfma.model.dto.SeatDTO;
+import com.ticketfma.model.dto.SeatRequest;
 import com.ticketfma.repository.IEventRepository;
 import com.ticketfma.service.IEventService;
 

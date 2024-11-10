@@ -1,18 +1,16 @@
-package com.ticketfma.domain;
+package com.ticketfma.model.dto;
 
-import com.ticketfma.domain.enums.SeatStatus;
+import com.ticketfma.model.enums.SeatStatus;
 
 import lombok.Builder;
 import lombok.Data;
 
-@Data
 @Builder
-public class Seat {
+@Data
+public class SeatDTO {
     private String seatNumber;
     private String row;
     private String level;
     private String section;
     private SeatStatus status;
-    private int sellRank;
-    private boolean hasUpsells;
 }

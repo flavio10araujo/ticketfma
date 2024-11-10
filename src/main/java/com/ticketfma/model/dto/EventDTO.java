@@ -1,4 +1,4 @@
-package com.ticketfma.dto;
+package com.ticketfma.model.dto;
 
 import java.time.LocalDate;
 

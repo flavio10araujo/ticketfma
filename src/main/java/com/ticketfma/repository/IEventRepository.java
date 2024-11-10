@@ -3,9 +3,9 @@ package com.ticketfma.repository;
 import java.util.List;
 import java.util.Optional;
 
-import com.ticketfma.domain.Event;
-import com.ticketfma.domain.Seat;
-import com.ticketfma.dto.SeatRequest;
+import com.ticketfma.model.Event;
+import com.ticketfma.model.Seat;
+import com.ticketfma.model.dto.SeatRequest;
 
 public interface IEventRepository {
     boolean eventExists(String eventId);

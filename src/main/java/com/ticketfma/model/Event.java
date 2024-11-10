@@ -1,4 +1,4 @@
-package com.ticketfma.domain;
+package com.ticketfma.model;
 
 import java.time.LocalDate;
 

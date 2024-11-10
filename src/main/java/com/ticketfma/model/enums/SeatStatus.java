@@ -1,4 +1,4 @@
-package com.ticketfma.domain.enums;
+package com.ticketfma.model.enums;
 
 public enum SeatStatus {
     OPEN,

@@ -3,9 +3,9 @@ package com.ticketfma.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.ticketfma.dto.EventDTO;
-import com.ticketfma.dto.SeatDTO;
-import com.ticketfma.dto.SeatRequest;
+import com.ticketfma.model.dto.EventDTO;
+import com.ticketfma.model.dto.SeatDTO;
+import com.ticketfma.model.dto.SeatRequest;
 
 public interface IEventService {
     List<EventDTO> getAllEvents(String sortBy);

@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ticketfma.dto.EventDTO;
-import com.ticketfma.dto.SeatDTO;
-import com.ticketfma.dto.SeatRequest;
+import com.ticketfma.model.dto.EventDTO;
+import com.ticketfma.model.dto.SeatDTO;
+import com.ticketfma.model.dto.SeatRequest;
 import com.ticketfma.service.IEventService;
 
 import io.swagger.v3.oas.annotations.Operation;

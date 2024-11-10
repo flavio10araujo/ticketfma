@@ -1,7 +1,7 @@
 package com.ticketfma.mapper;
 
-import com.ticketfma.domain.Seat;
-import com.ticketfma.dto.SeatDTO;
+import com.ticketfma.model.Seat;
+import com.ticketfma.model.dto.SeatDTO;
 
 public class SeatMapper {
 

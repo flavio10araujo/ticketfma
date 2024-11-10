@@ -1,7 +1,7 @@
 package com.ticketfma.mapper;
 
-import com.ticketfma.domain.Event;
-import com.ticketfma.dto.EventDTO;
+import com.ticketfma.model.Event;
+import com.ticketfma.model.dto.EventDTO;
 
 public class EventMapper {
 

@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import com.ticketfma.domain.Event;
-import com.ticketfma.domain.Seat;
-import com.ticketfma.domain.enums.SeatStatus;
+import com.ticketfma.model.Event;
+import com.ticketfma.model.Seat;
+import com.ticketfma.model.enums.SeatStatus;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

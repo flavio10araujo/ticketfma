@@ -22,11 +22,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.ticketfma.domain.Event;
-import com.ticketfma.domain.Seat;
-import com.ticketfma.domain.enums.SeatStatus;
-import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.exception.SeatUnavailableException;
+import com.ticketfma.model.Event;
+import com.ticketfma.model.Seat;
+import com.ticketfma.model.dto.SeatRequest;
+import com.ticketfma.model.enums.SeatStatus;
 
 @ExtendWith(MockitoExtension.class)
 public class EventRepositoryTest {

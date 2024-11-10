@@ -12,12 +12,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
-import com.ticketfma.domain.Event;
-import com.ticketfma.domain.Seat;
-import com.ticketfma.domain.enums.SeatStatus;
-import com.ticketfma.dto.SeatRequest;
 import com.ticketfma.exception.SeatNotFoundException;
 import com.ticketfma.exception.SeatUnavailableException;
+import com.ticketfma.model.Event;
+import com.ticketfma.model.Seat;
+import com.ticketfma.model.dto.SeatRequest;
+import com.ticketfma.model.enums.SeatStatus;
 import com.ticketfma.repository.IEventRepository;
 
 import jakarta.annotation.PostConstruct;
