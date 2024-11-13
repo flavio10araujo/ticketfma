@@ -22,7 +22,7 @@ public class EventServiceImpl implements EventServicePort {
     private final EventRepositoryPort repository;
 
     @Override
-    public List<Event> getAllEvents(Optional<String> sortBy) {
+    public List<Event> getAllEvents(String sortBy) {
         return repository.getAllEvents(sortBy);
     }
 

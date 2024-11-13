@@ -9,7 +9,7 @@ import com.ticketfma.domain.model.Seat;
 
 public interface EventServicePort {
 
-    List<Event> getAllEvents(Optional<String> sortBy);
+    List<Event> getAllEvents(String sortBy);
 
     Optional<Seat> getSeat(String eventId, SeatRequest seatRequest);
 

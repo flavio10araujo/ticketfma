@@ -39,7 +39,7 @@ public class EventController {
     @GetMapping("/v1/events")
     @Operation(summary = "Get all available events with optional sorting by event name or event date.")
     public ResponseEntity<List<Event>> getEvents(@RequestParam Optional<String> sort) {
-        List<Event> events = eventService.getAllEvents(sort);
+        List<Event> events = eventService.getAllEvents(sort.orElse(null));
         return ResponseEntity.ok(events);
     }
 

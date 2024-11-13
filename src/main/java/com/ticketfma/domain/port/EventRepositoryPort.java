@@ -15,7 +15,7 @@ public interface EventRepositoryPort {
 
     boolean seatAvailable(String eventId, String seatNumber, String row, String level, String section);
 
-    List<Event> getAllEvents(Optional<String> sortBy);
+    List<Event> getAllEvents(String sortBy);
 
     Optional<Seat> getSeat(String eventId, String seatNumber, String row, String level, String section);
 

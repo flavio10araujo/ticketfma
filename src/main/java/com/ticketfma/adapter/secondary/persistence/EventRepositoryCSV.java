@@ -109,13 +109,13 @@ public class EventRepositoryCSV implements EventRepositoryPort {
     }
 
     @Override
-    public List<Event> getAllEvents(Optional<String> sortBy) {
+    public List<Event> getAllEvents(String sortBy) {
         return events.stream()
                 .sorted((e1, e2) -> {
-                    if (sortBy.isPresent()) {
-                        if (sortBy.get().equals(SORT_BY_NAME)) {
+                    if (sortBy != null) {
+                        if (SORT_BY_NAME.equalsIgnoreCase(sortBy)) {
                             return e1.getName().compareTo(e2.getName());
-                        } else if (sortBy.get().equals(SORT_BY_DATE)) {
+                        } else if (SORT_BY_DATE.equalsIgnoreCase(sortBy)) {
                             return e1.getEventDate().compareTo(e2.getEventDate());
                         }
                     }
